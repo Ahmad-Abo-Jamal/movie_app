@@ -5,10 +5,12 @@ import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
 import 'package:switch_theme/blocs/bloc/movies_bloc.dart';
 import 'package:switch_theme/core/auth/authentification.dart';
+import 'package:switch_theme/screens/home_screen.dart';
 import 'package:switch_theme/screens/list_screen.dart';
 import 'package:switch_theme/screens/login_screen.dart';
 
 import 'Theme/themes.dart';
+import 'blocs/bloc/bloc/home_bloc_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,9 @@ void main() {
         create: (context) => ThemeBloc(),
       ),
       BlocProvider(create: (context) => MoviesBloc()),
+      BlocProvider(
+        create: (context) => HomeBloc(),
+      )
     ],
     child: MyApp(userRepository: userRepository),
   ));
@@ -47,7 +52,7 @@ class MyApp extends StatelessWidget {
               if (authState is AuthenticationInitial) {
                 return SplashScreen();
               } else if (authState is AuthenticationSuccess) {
-                return ListScreen();
+                return HomeScreen();
               }
               return LoginScreen(
                 userRepository: _userRepository,

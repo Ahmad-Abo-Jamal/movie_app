@@ -4,6 +4,7 @@ enum AppTheme { DarkTheme, LightTheme }
 
 final Map<AppTheme, ThemeData> appTheme = {
   AppTheme.DarkTheme: ThemeData(
+      fontFamily: 'Poppins',
       primaryColor: Colors.black,
       brightness: Brightness.dark,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -15,7 +16,9 @@ final Map<AppTheme, ThemeData> appTheme = {
               fontSize: 20.0,
               fontWeight: FontWeight.bold))),
   AppTheme.LightTheme: ThemeData(
-      primaryColor: Colors.blueAccent,
+      fontFamily: 'Poppins',
+      primaryColor: Colors.teal,
+      backgroundColor: Colors.tealAccent,
       brightness: Brightness.light,
       floatingActionButtonTheme:
           FloatingActionButtonThemeData(backgroundColor: Colors.black),

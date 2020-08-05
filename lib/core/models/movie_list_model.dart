@@ -118,6 +118,10 @@ class Result extends Equatable {
   String toJson() => json.encode(toMap());
 
   static Result fromJson(String source) => fromMap(json.decode(source));
+  @override
+  String toString() {
+    return this.title;
+  }
 
   @override
   // TODO: implement props

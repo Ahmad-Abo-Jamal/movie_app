@@ -65,7 +65,8 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   Stream<MoviesState> _mapGetNextPage(event, int page) async* {
     try {
       MovieList response = await _api.getNextMoviesPage(event.criteria, page);
-      logger.d(response);
+      print(response.results);
+      print(state.movies);
       yield MoviesLoaded(
           movies: state.movies + response.results,
           reachedEnd: false,

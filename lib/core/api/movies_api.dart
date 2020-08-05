@@ -9,10 +9,11 @@ abstract class MoviesRepo {
   final logger = Logger();
   static const imgUrl = "https://image.tmdb.org/t/p/w500";
   String url(dynamic uri, {String language, int page}) =>
-      "https://api.themoviedb.org/3/movie/$uri?api_key=$api_key&language=${language ?? "en-US"}${page == null ? "page=${page}" : ""}";
+      "https://api.themoviedb.org/3/movie/$uri?api_key=$api_key&language=${language ?? "en-US"}&page=${page ?? 1}";
   static const api_key = "63795a93730c06f68c8c6d5f8cd9289e";
   Future<MovieDetails> getMovieById(int id);
   Future<MovieList> getNextMoviesPage(String criteria, int page);
+  Future<MovieList> getTrending(int page, String dw);
 }
 
 class MoviesApi extends MoviesRepo {
@@ -37,9 +38,8 @@ class MoviesApi extends MoviesRepo {
 
     try {
       http.Response response = await http.get("${url(criteria, page: page)}");
-      logger.i(response.statusCode);
+      logger.i(response.body);
       if (response.statusCode == 200) {
-        logger.d(jsonDecode(response.body)["total_pages"] + page);
         if (page >= jsonDecode(response.body)["total_pages"]) {
           throw NoNextPageException();
         }
@@ -49,6 +49,25 @@ class MoviesApi extends MoviesRepo {
     } catch (e) {
       logger.e(e);
       throw Exception("Failed to load $criteria movies");
+    }
+  }
+
+  Future<MovieList> getTrending(int page, String dw) async {
+    logger.d(page);
+    try {
+      http.Response response = await http.get(
+          "https://api.themoviedb.org/3/trending/movie/${dw ?? "day"}?api_key=${MoviesRepo.api_key}");
+      logger.i(response.body);
+      if (response.statusCode == 200) {
+        if (page >= jsonDecode(response.body)["total_pages"]) {
+          throw NoNextPageException();
+        }
+        return MovieList.fromMap(jsonDecode(response.body));
+      }
+      throw Exception("Failed to Load trending movies");
+    } catch (e) {
+      logger.e(e);
+      throw Exception("Failed to load trending movies");
     }
   }
 }

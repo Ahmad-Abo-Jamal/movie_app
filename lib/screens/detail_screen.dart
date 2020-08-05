@@ -96,15 +96,8 @@ class _DetailScreenState extends State<DetailScreen> {
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: state?.movie?.genres?.length ?? 0,
-          itemBuilder: (_, i) => Card(
-            color: Theme.of(context).backgroundColor,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(state?.movie?.genres[i]?.name ?? ""),
-              ),
-            ),
-          ),
+          itemBuilder: (_, i) =>
+              Chip(label: Text(state?.movie?.genres[i]?.name ?? "")),
         ),
       );
     else if (state is MoviesLoading) {

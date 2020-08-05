@@ -17,12 +17,12 @@ class ConfirmDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: Text("cofirm")),
+            child: Text("Confirm")),
         FlatButton(
             onPressed: () {
               Navigator.of(context).pop(false);
             },
-            child: Text("return"))
+            child: Text("Return"))
       ],
     );
   }
