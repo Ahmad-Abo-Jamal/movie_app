@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:switch_theme/blocs/movi_blocs/bloc/details_bloc.dart';
 import 'package:switch_theme/blocs/movi_blocs/movies_bloc.dart';
+import 'package:switch_theme/core/api/constants.dart';
 import 'package:switch_theme/core/api/movies_api.dart';
 import 'package:switch_theme/core/models/movie_list_model.dart';
 import 'package:switch_theme/shared/app_bar.dart';
@@ -148,7 +149,7 @@ class _DetailScreenState extends State<DetailScreen> {
           state?.similarMovies?.length > 0
               ? Trending(
                   context: context,
-                  imgUrl: MoviesApi.imgUrl,
+                  imgUrl: imgUrl,
                   items: state?.similarMovies ?? [])
               : Chip(
                   label: Text("No Similar Movies"),

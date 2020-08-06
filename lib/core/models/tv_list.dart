@@ -37,7 +37,7 @@ class TvList extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  static MovieList fromJson(String source) => fromMap(json.decode(source));
+  static TvList fromJson(String source) => fromMap(json.decode(source));
 
   @override
   // TODO: implement props
