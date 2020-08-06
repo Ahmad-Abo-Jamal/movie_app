@@ -18,7 +18,7 @@ final Map<AppTheme, ThemeData> appTheme = {
   AppTheme.LightTheme: ThemeData(
       fontFamily: 'Poppins',
       primaryColor: Colors.teal,
-      backgroundColor: Colors.tealAccent,
+      backgroundColor: Colors.tealAccent[400],
       brightness: Brightness.light,
       floatingActionButtonTheme:
           FloatingActionButtonThemeData(backgroundColor: Colors.black),

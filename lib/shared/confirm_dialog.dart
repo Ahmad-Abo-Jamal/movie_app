@@ -11,7 +11,7 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Text(message),
+      content: Text(message ?? "Are You Sure You want to log out ? "),
       actions: <Widget>[
         FlatButton(
             onPressed: () {

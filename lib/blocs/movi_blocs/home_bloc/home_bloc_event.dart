@@ -4,6 +4,12 @@ abstract class HomeEvent extends Equatable {
   const HomeEvent();
 }
 
+class GetLatest extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
+}
+
 class GetTrending extends HomeEvent {
   final String dw;
   final int nextPage;

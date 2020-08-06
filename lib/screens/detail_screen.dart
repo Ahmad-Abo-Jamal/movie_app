@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
-import 'package:switch_theme/blocs/bloc/movies_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/bloc/details_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/movies_bloc.dart';
+import 'package:switch_theme/core/api/movies_api.dart';
 import 'package:switch_theme/core/models/movie_list_model.dart';
-import 'package:switch_theme/shared/theme_switcher.dart';
-import "../core/models/movie_model.dart";
+import 'package:switch_theme/shared/app_bar.dart';
+import 'package:switch_theme/shared/trending.dart';
 import 'list_screen.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -20,40 +21,55 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<MoviesBloc>(context).getMovieById(widget.result.id);
+    BlocProvider.of<DetailsBloc>(context).getMovieById(widget.result.id);
+    BlocProvider.of<DetailsBloc>(context).getSimilarMovies(widget.result.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        actions: <Widget>[MySwitch(bloc: BlocProvider.of<ThemeBloc>(context))],
-        centerTitle: true,
-        title: Text("detail screen"),
+      appBar: MyAppBar(
+        title: "Detail Screen",
+        leading: false,
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Padding(
+      body: buildSingleChildScrollView(context),
+    );
+  }
+
+  SingleChildScrollView buildSingleChildScrollView(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 1.2,
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 4,
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Hero(
-                    tag: widget?.result?.id,
-                    child: Image.network(
-                        "${ListScreen.imgUrl}${widget?.result?.backdrop_path}")),
+                  tag: widget?.result?.id,
+                  child: Image.network(
+                    "${ListScreen.imgUrl}${widget?.result?.backdrop_path}",
+                    errorBuilder: (_, __, ___) {
+                      return Image.asset("assets/no-image.png");
+                    },
+                  ),
+                ),
               ),
-              Padding(
+            ),
+            Flexible(
+              flex: 1,
+              child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Center(
                     child: Text(widget?.result?.title,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 30.0))),
               ),
-              SmoothStarRating(
+            ),
+            Flexible(
+              flex: 1,
+              child: SmoothStarRating(
                   allowHalfRating: false,
                   onRated: (v) {},
                   starCount: 5,
@@ -63,44 +79,52 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: Colors.green,
                   borderColor: Colors.green,
                   spacing: 0.0),
-              SizedBox(
-                height: 20.0,
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    widget?.result?.overview,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 15.0),
-                  ),
+            ),
+            Flexible(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  widget?.result?.overview,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 15.0),
                 ),
               ),
-              BlocBuilder<MoviesBloc, MoviesState>(
+            ),
+            Flexible(
+              flex: 5,
+              child: BlocBuilder<DetailsBloc, DetailsState>(
                 builder: (context, state) {
                   return _render(context, state);
                 },
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
   }
 
-  Widget _render(BuildContext context, MoviesState state) {
-    if (state is MoviesLoaded)
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.99,
-        height: MediaQuery.of(context).size.height * 0.07,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: state?.movie?.genres?.length ?? 0,
-          itemBuilder: (_, i) =>
-              Chip(label: Text(state?.movie?.genres[i]?.name ?? "")),
-        ),
+  Widget _render(BuildContext context, DetailsState state) {
+    if (state is DetailsLoaded)
+      return Column(
+        children: <Widget>[
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state?.movie?.genres?.length ?? 0,
+                itemBuilder: (_, i) =>
+                    Chip(label: Text(state?.movie?.genres[i]?.name ?? "")),
+              ),
+            ),
+          ),
+          Flexible(flex: 4, child: _renderSimilarMovies(state)),
+        ],
       );
-    else if (state is MoviesLoading) {
+    else if (state is DetailsLoading) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: LinearProgressIndicator(),
@@ -111,5 +135,29 @@ class _DetailScreenState extends State<DetailScreen> {
         color: Theme.of(context).backgroundColor,
       );
     }
+  }
+
+  Widget _renderSimilarMovies(DetailsState state) {
+    if (state is DetailsLoaded) {
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Similar Movies", style: TextStyle(fontSize: 30.0)),
+          ),
+          state?.similarMovies?.length > 0
+              ? Trending(
+                  context: context,
+                  imgUrl: MoviesApi.imgUrl,
+                  items: state?.similarMovies ?? [])
+              : Chip(
+                  label: Text("No Similar Movies"),
+                ),
+        ],
+      );
+    } else if (state is DetailsLoading) {
+      return LinearProgressIndicator();
+    }
+    return SizedBox();
   }
 }

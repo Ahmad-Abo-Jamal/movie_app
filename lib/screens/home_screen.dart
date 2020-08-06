@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
-import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
-import 'package:switch_theme/blocs/bloc/bloc/home_bloc_bloc.dart';
-import 'package:switch_theme/blocs/bloc/movies_bloc.dart';
-import 'package:switch_theme/shared/confirm_dialog.dart';
-import 'package:switch_theme/shared/theme_switcher.dart';
+
+import 'package:switch_theme/blocs/movi_blocs/home_bloc/home_bloc_bloc.dart';
+
+import 'package:switch_theme/shared/trending.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,40 +18,45 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<HomeBloc>(context).getTrending();
+    BlocProvider.of<HomeBloc>(context).getTrending(dw: "week");
+    BlocProvider.of<HomeBloc>(context).getLatest();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(MdiIcons.logout),
-          onPressed: () async {
-            bool log = await showDialog<bool>(
-                context: context,
-                builder: (_) {
-                  return ConfirmDialog(
-                    message: "are you sure you wanna log out ? ",
-                  );
-                });
-            if (log) {
-              BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
-            }
-          },
-        ),
-        title: Text("Home"),
-        actions: <Widget>[MySwitch(bloc: BlocProvider.of<ThemeBloc>(context))],
-      ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return Column(
-            children: <Widget>[
-              Container(
-                child: _render(state),
-              )
-            ],
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  flex: 1,
+                  child: ListTile(
+                      trailing: PopupMenuButton(onSelected: (String value) {
+                        Logger().d(value);
+                        BlocProvider.of<HomeBloc>(context)
+                            .getTrending(dw: value);
+                      }, itemBuilder: (_) {
+                        return [
+                          PopupMenuItem(
+                              value: "day", child: Text("of the day")),
+                          PopupMenuItem(
+                              value: "week", child: Text("of the week")),
+                        ];
+                      }),
+                      leading:
+                          Text("Trending ", style: TextStyle(fontSize: 30.0))),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    child: _render(state),
+                  ),
+                )
+              ],
+            ),
           );
         },
       ),
@@ -62,64 +64,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _render(HomeState state) {
+    Logger().d(state.latest);
     if (state is HomeLoaded)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Trending", style: TextStyle(fontSize: 30.0)),
+          Flexible(
+            flex: 2,
+            child: Trending(
+              items: state?.trendings ?? [],
+              context: context,
+              imgUrl: imgUrl,
+            ),
           ),
-          Container(
-            padding: EdgeInsets.all(8.0),
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: ListView.builder(
-                itemCount: state?.trendings?.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, i) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          FadeInImage.assetNetwork(
-                              placeholder: "assets/371.gif",
-                              imageErrorBuilder: (_, o, st) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.25,
-                                    child: Image.asset(
-                                      "assets/no-image.png",
-                                    ));
-                              },
-                              image: imgUrl +
-                                  (state?.trendings[i]?.backdrop_path ?? "")),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          Expanded(
-                            child: Text(
-                              state?.trendings[i]?.title,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-          ),
+          if (state.latest != null)
+            Flexible(
+              flex: 1,
+              child: MyCard(
+                imgUrl: imgUrl,
+                movie: state?.latest,
+              ),
+            )
         ],
       );
     else if (state is HomeLoading) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: LinearProgressIndicator(),
+        ),
       );
     } else if (state is HomeInitial) {
       return Center(
-        child: Text("initial"),
+        child: CircularProgressIndicator(),
       );
     }
     return Text("error");

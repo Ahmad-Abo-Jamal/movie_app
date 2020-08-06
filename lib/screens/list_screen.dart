@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
-import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
-import 'package:switch_theme/blocs/bloc/movies_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/movies_bloc.dart';
 import 'package:switch_theme/screens/detail_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:switch_theme/shared/confirm_dialog.dart';
-import 'package:switch_theme/shared/theme_switcher.dart';
 
 class ListScreen extends StatefulWidget {
   static const imgUrl = "https://image.tmdb.org/t/p/w500/";
@@ -22,56 +19,22 @@ class ListScreen extends StatefulWidget {
 class _ListScreenState extends State<ListScreen> {
   int _currentIndex = 0;
   final _scrollController = ScrollController();
-  ThemeBloc _bloc;
-  bool _switch = false;
   MoviesBloc _mbloc;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _bloc = BlocProvider.of<ThemeBloc>(context);
     _mbloc = BlocProvider.of<MoviesBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    _mbloc.close();
-    super.dispose();
+    _mbloc.getMoviesByCriteria("now_playing");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
       body: BlocBuilder<MoviesBloc, MoviesState>(builder: (context, state) {
         return Center(child: _render(context, state));
       }),
       bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      actions: <Widget>[MySwitch(bloc: _bloc)],
-      leading: IconButton(
-          icon: Icon(MdiIcons.logout),
-          onPressed: () async {
-            var loggout = await showDialog<bool>(
-                context: context,
-                builder: (_) {
-                  return ConfirmDialog(
-                    message: "Are you sure you wanna logout ?",
-                  );
-                });
-            if (loggout) {
-              BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
-            }
-          }),
-      title: Text(
-        "Movie App",
-      ),
-      centerTitle: true,
     );
   }
 
@@ -80,7 +43,7 @@ class _ListScreenState extends State<ListScreen> {
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).accentColor,
         onTap: (index) {
-          final table = ["now_playing", "popular", "top_rated"];
+          final table = ["now_playing", "popular", "top_rated", "upcoming"];
           _mbloc.getMoviesByCriteria(table[index]);
           setState(() {
             _currentIndex = index;
@@ -93,6 +56,8 @@ class _ListScreenState extends State<ListScreen> {
               icon: Icon(MdiIcons.star), title: Text("popular")),
           BottomNavigationBarItem(
               icon: Icon(MdiIcons.starBox), title: Text("top rated")),
+          BottomNavigationBarItem(
+              icon: Icon(MdiIcons.newBox), title: Text("upcoming")),
         ]);
   }
 
@@ -139,7 +104,6 @@ class _ListScreenState extends State<ListScreen> {
   ListTile _movieTile(MoviesLoaded state, int i) {
     return ListTile(
       onTap: () {
-        _mbloc.getMovieById(state?.movies[i].id);
         Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (_) => DetailScreen(
                   result: state?.movies[i],
@@ -148,6 +112,9 @@ class _ListScreenState extends State<ListScreen> {
       leading: Hero(
         tag: state?.movies[i]?.id,
         child: FadeInImage.assetNetwork(
+            imageErrorBuilder: (_, __, ___) {
+              return Image.asset("assets/no-image.png");
+            },
             placeholder: "assets/371.gif",
             image:
                 "${ListScreen.imgUrl}${state?.movies[i]?.backdrop_path ?? ""}"),

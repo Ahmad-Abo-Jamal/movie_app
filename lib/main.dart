@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
-import 'package:switch_theme/blocs/bloc/movies_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/bloc/details_bloc.dart';
 import 'package:switch_theme/core/auth/authentification.dart';
+import 'package:switch_theme/screens/detail_screen.dart';
 import 'package:switch_theme/screens/home_screen.dart';
 import 'package:switch_theme/screens/list_screen.dart';
 import 'package:switch_theme/screens/login_screen.dart';
+import 'package:switch_theme/shared/app_bar.dart';
 
 import 'Theme/themes.dart';
-import 'blocs/bloc/bloc/home_bloc_bloc.dart';
+import 'blocs/movi_blocs/home_bloc/home_bloc_bloc.dart';
+import 'blocs/movi_blocs/movies_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +29,9 @@ void main() {
       BlocProvider(create: (context) => MoviesBloc()),
       BlocProvider(
         create: (context) => HomeBloc(),
+      ),
+      BlocProvider(
+        create: (context) => DetailsBloc(),
       )
     ],
     child: MyApp(userRepository: userRepository),
@@ -52,7 +58,7 @@ class MyApp extends StatelessWidget {
               if (authState is AuthenticationInitial) {
                 return SplashScreen();
               } else if (authState is AuthenticationSuccess) {
-                return HomeScreen();
+                return MainScreen();
               }
               return LoginScreen(
                 userRepository: _userRepository,
@@ -69,5 +75,37 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Center(child: Text('Splash Screen')),
     );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(title: "Movie App", tabController: _tabController),
+      body: TabBarView(
+          controller: _tabController, children: [HomeScreen(), ListScreen()]),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }

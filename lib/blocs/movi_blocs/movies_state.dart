@@ -2,10 +2,17 @@ part of 'movies_bloc.dart';
 
 abstract class MoviesState extends Equatable {
   final List<Result> movies;
+  final List<Result> similarMovies;
   final MovieDetails movie;
   final int currentPage;
   final String criteria;
-  const MoviesState({this.movies, this.movie, this.currentPage, this.criteria});
+  const MoviesState({
+    this.similarMovies,
+    this.movies,
+    this.movie,
+    this.currentPage,
+    this.criteria,
+  });
 }
 
 class MoviesInitial extends MoviesState {
@@ -18,10 +25,12 @@ class MoviesLoading extends MoviesState {
   const MoviesLoading(
       {int currentPage,
       String criteria,
+      List<Result> similarMovies,
       List<Result> movies,
       MovieDetails movie})
       : super(
             currentPage: currentPage,
+            similarMovies: similarMovies,
             criteria: criteria,
             movies: movies,
             movie: movie);
@@ -35,6 +44,7 @@ class MoviesLoaded extends MoviesState {
 
   MoviesLoaded(
       {List<Result> movies,
+      List<Result> similarMovies,
       MovieDetails movie,
       this.reachedEnd,
       String criteria,

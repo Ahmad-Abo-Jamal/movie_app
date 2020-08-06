@@ -16,9 +16,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
 
   MoviesBloc() : super(MoviesInitial());
   final _api = MoviesApi();
-  void getMovieById(int id) {
-    this.add(GetMovieById(id: id));
-  }
 
   void getMoviesByCriteria(String criteria) {
     this.add(GetMoviesByCriteria(criteria: criteria));
@@ -34,9 +31,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   Stream<MoviesState> mapEventToState(
     MoviesEvent event,
   ) async* {
-    if (event is GetMovieById) {
-      yield* _mapGetMovieById(event.id);
-    } else if (event is GetMoviesByCriteria) {
+    if (event is GetMoviesByCriteria) {
       yield* _mapGetMoviesByCriteriaToState(event);
     } else if (event is GetNextPage) {
       yield* _mapGetNextPage(event, event.nextPage);
@@ -65,8 +60,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   Stream<MoviesState> _mapGetNextPage(event, int page) async* {
     try {
       MovieList response = await _api.getNextMoviesPage(event.criteria, page);
-      print(response.results);
-      print(state.movies);
+
       yield MoviesLoaded(
           movies: state.movies + response.results,
           reachedEnd: false,
@@ -75,27 +69,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     } on NoNextPageException catch (_) {
       yield MoviesLoaded(
           movies: state.movies, reachedEnd: true, criteria: event.criteria);
-    } catch (e) {
-      logger.e(e);
-      yield MoviesError(message: e.toString());
-    }
-  }
-
-  Stream<MoviesState> _mapGetMovieById(int id) async* {
-    try {
-      yield MoviesLoading(
-          movies: state.movies,
-          movie: state.movie,
-          criteria: state.criteria,
-          currentPage: state.currentPage);
-      MovieDetails response = await _api.getMovieById(id);
-      logger.d(response);
-      yield MoviesLoaded(
-          movie: response,
-          movies: state.movies,
-          reachedEnd: false,
-          criteria: state.criteria,
-          currentPage: state.currentPage);
     } catch (e) {
       logger.e(e);
       yield MoviesError(message: e.toString());
