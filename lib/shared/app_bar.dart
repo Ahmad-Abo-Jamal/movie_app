@@ -29,6 +29,9 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
               ),
               Tab(
                 icon: Icon(MdiIcons.movie),
+              ),
+              Tab(
+                icon: Icon(MdiIcons.television),
               )
             ])
           : null,

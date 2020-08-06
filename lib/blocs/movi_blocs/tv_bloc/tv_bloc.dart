@@ -67,7 +67,10 @@ class TvBloc extends Bloc<TvEvent, TvState> {
           currentPage: state.currentPage + 1);
     } on NoNextPageException catch (_) {
       yield TvLoaded(
-          tvList: state.tvList, reachedEnd: true, criteria: event.criteria);
+          tvList: state.tvList,
+          reachedEnd: true,
+          criteria: event.criteria,
+          currentPage: state.currentPage);
     } catch (e) {
       logger.e(e);
       yield TvError(message: e.toString());

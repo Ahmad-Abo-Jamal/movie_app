@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<HomeBloc>(context).getTrending(dw: "week");
-    BlocProvider.of<HomeBloc>(context).getLatest();
   }
 
   @override
@@ -77,14 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
               imgUrl: imgUrl,
             ),
           ),
-          if (state.latest != null)
-            Flexible(
-              flex: 1,
-              child: MyCard(
-                imgUrl: imgUrl,
-                movie: state?.latest,
-              ),
-            )
         ],
       );
     else if (state is HomeLoading) {

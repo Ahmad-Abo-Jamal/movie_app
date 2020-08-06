@@ -40,7 +40,7 @@ class TvApi implements TvRepo {
 
     try {
       http.Response response = await http.get("${url(criteria, page: page)}");
-      logger.i(response.body);
+
       if (response.statusCode == 200) {
         if (page >= jsonDecode(response.body)["total_pages"]) {
           throw NoNextPageException();

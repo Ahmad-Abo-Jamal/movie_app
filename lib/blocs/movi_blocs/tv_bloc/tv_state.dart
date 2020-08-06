@@ -6,15 +6,16 @@ abstract class TvState extends Equatable {
   final int currentPage;
   final String criteria;
   const TvState(
-      {this.tvList, this.reachedEnd = false, this.currentPage, this.criteria})
-      : assert(tvList != null &&
-            currentPage != null &&
-            reachedEnd != null &&
-            criteria != null);
+      {this.tvList, this.reachedEnd = false, this.currentPage, this.criteria});
 }
 
 class TvInitial extends TvState {
-  TvInitial() : super(tvList: <TvResult>[], currentPage: 1, reachedEnd: false);
+  TvInitial()
+      : super(
+            tvList: <TvResult>[],
+            currentPage: 1,
+            reachedEnd: false,
+            criteria: "airing_today");
   @override
   List<Object> get props => [];
 }
@@ -36,11 +37,11 @@ class TvLoading extends TvState {
 }
 
 class TvLoaded extends TvState {
-  bool reachedEnd = false;
+  final bool reachedEnd;
 
   TvLoaded(
       {List<TvResult> tvList,
-      this.reachedEnd,
+      this.reachedEnd = false,
       String criteria,
       int currentPage})
       : super(tvList: tvList, currentPage: currentPage, criteria: criteria);

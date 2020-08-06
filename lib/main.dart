@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
 import 'package:switch_theme/blocs/movi_blocs/bloc/details_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/tv_bloc/tv_bloc.dart';
 import 'package:switch_theme/core/auth/authentification.dart';
 import 'package:switch_theme/screens/detail_screen.dart';
 import 'package:switch_theme/screens/home_screen.dart';
 import 'package:switch_theme/screens/list_screen.dart';
 import 'package:switch_theme/screens/login_screen.dart';
+import 'package:switch_theme/screens/tv_list_screen.dart';
 import 'package:switch_theme/shared/app_bar.dart';
 
 import 'Theme/themes.dart';
@@ -32,6 +34,9 @@ void main() {
       ),
       BlocProvider(
         create: (context) => DetailsBloc(),
+      ),
+      BlocProvider(
+        create: (context) => TvBloc(),
       )
     ],
     child: MyApp(userRepository: userRepository),
@@ -91,7 +96,7 @@ class _MainScreenState extends State<MainScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -99,7 +104,8 @@ class _MainScreenState extends State<MainScreen>
     return Scaffold(
       appBar: MyAppBar(title: "Movie App", tabController: _tabController),
       body: TabBarView(
-          controller: _tabController, children: [HomeScreen(), ListScreen()]),
+          controller: _tabController,
+          children: [HomeScreen(), ListScreen(), TvListScreen()]),
     );
   }
 

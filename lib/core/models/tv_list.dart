@@ -50,7 +50,7 @@ class TvResult extends Equatable {
   final String release_date;
   final List<int> genre_ids;
   final int id;
-  final String original_title;
+  final num vote_average;
   final String original_language;
   final String name;
   final String first_air_date;
@@ -65,7 +65,7 @@ class TvResult extends Equatable {
     this.release_date,
     this.genre_ids,
     this.id,
-    this.original_title,
+    this.vote_average,
     this.original_language,
     this.name,
     this.first_air_date,
@@ -75,13 +75,32 @@ class TvResult extends Equatable {
     this.original_name,
   });
 
+  @override
+  List<Object> get props {
+    return [
+      poster_path,
+      overview,
+      release_date,
+      genre_ids,
+      id,
+      vote_average,
+      original_language,
+      name,
+      first_air_date,
+      backdrop_path,
+      popularity,
+      vote_count,
+      original_name,
+    ];
+  }
+
   TvResult copyWith({
     String poster_path,
     String overview,
     String release_date,
     List<int> genre_ids,
     int id,
-    String original_title,
+    int vote_average,
     String original_language,
     String name,
     String first_air_date,
@@ -96,7 +115,7 @@ class TvResult extends Equatable {
       release_date: release_date ?? this.release_date,
       genre_ids: genre_ids ?? this.genre_ids,
       id: id ?? this.id,
-      original_title: original_title ?? this.original_title,
+      vote_average: vote_average ?? this.vote_average,
       original_language: original_language ?? this.original_language,
       name: name ?? this.name,
       first_air_date: first_air_date ?? this.first_air_date,
@@ -114,7 +133,7 @@ class TvResult extends Equatable {
       'release_date': release_date,
       'genre_ids': genre_ids,
       'id': id,
-      'original_title': original_title,
+      'vote_average': vote_average,
       'original_language': original_language,
       'name': name,
       'first_air_date': first_air_date,
@@ -134,7 +153,7 @@ class TvResult extends Equatable {
       release_date: map['release_date'],
       genre_ids: List<int>.from(map['genre_ids']),
       id: map['id'],
-      original_title: map['original_title'],
+      vote_average: map['vote_average'],
       original_language: map['original_language'],
       name: map['name'],
       first_air_date: map['first_air_date'],
@@ -152,9 +171,4 @@ class TvResult extends Equatable {
 
   @override
   bool get stringify => true;
-
-  @override
-  List<Object> get props {
-    return [id];
-  }
 }
