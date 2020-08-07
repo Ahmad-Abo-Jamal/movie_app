@@ -8,7 +8,6 @@ class GetTvByCriteria extends TvEvent {
   final String criteria;
   GetTvByCriteria({this.criteria});
   @override
-  // TODO: implement props
   List<Object> get props => [criteria];
 }
 
@@ -18,6 +17,5 @@ class GetNextTvPage extends TvEvent {
   GetNextTvPage({this.nextPage, this.criteria});
 
   @override
-  // TODO: implement props
   List<Object> get props => [criteria, nextPage];
 }

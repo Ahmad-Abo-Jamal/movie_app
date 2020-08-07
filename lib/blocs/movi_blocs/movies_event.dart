@@ -9,7 +9,6 @@ class GetMoviesByCriteria extends MoviesEvent {
 
   GetMoviesByCriteria({this.criteria});
   @override
-  // TODO: implement props
   List<Object> get props => [criteria];
 }
 
@@ -19,6 +18,5 @@ class GetNextPage extends MoviesEvent {
   GetNextPage({this.nextPage, this.criteria});
 
   @override
-  // TODO: implement props
   List<Object> get props => [criteria, nextPage];
 }

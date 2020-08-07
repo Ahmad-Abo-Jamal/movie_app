@@ -30,7 +30,6 @@ class MoviesLoading extends MoviesState {
           movies: movies,
         );
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -45,7 +44,6 @@ class MoviesLoaded extends MoviesState {
       int currentPage})
       : super(movies: movies, currentPage: currentPage, criteria: criteria);
   @override
-  // TODO: implement props
   List<Object> get props => [movies];
 }
 
@@ -53,6 +51,5 @@ class MoviesError extends MoviesState {
   final String message;
   const MoviesError({this.message});
   @override
-  // TODO: implement props
   List<Object> get props => [message];
 }

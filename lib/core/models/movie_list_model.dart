@@ -39,7 +39,6 @@ class MovieList extends Equatable {
   static MovieList fromJson(String source) => fromMap(json.decode(source));
 
   @override
-  // TODO: implement props
   List<Object> get props => [page, total_pages, total_results];
 }
 
@@ -124,6 +123,5 @@ class Result extends Equatable {
   }
 
   @override
-  // TODO: implement props
   List<Object> get props => [id];
 }

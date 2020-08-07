@@ -1,43 +1,44 @@
 part of 'home_bloc_bloc.dart';
 
-abstract class HomeState extends Equatable {
-  final int currentPage;
+abstract class HomeMoviesState extends Equatable {
   final List<Result> trendings;
-  final MovieDetails latest;
-  const HomeState({
-    this.currentPage,
-    this.latest,
+  final List<TvResult> tvShows;
+
+  const HomeMoviesState({
+    this.tvShows,
     this.trendings,
   });
 }
 
-class HomeInitial extends HomeState {
-  HomeInitial() : super(currentPage: 1, trendings: []);
+class HomeInitial extends HomeMoviesState {
+  HomeInitial() : super(trendings: [], tvShows: []);
   @override
   List<Object> get props => [];
 }
 
-class HomeLoaded extends HomeState {
-  const HomeLoaded(
-      {int currentPage, List<Result> trendings, MovieDetails latest})
-      : assert(trendings != null),
-        super(latest: latest, currentPage: currentPage, trendings: trendings);
+class HomeLoadedMovies extends HomeMoviesState {
+  const HomeLoadedMovies({List<Result> trendings, List<TvResult> tvShows})
+      : assert(trendings != null || tvShows != null),
+        super(trendings: trendings, tvShows: tvShows);
+
   @override
   // TODO: implement props
   List<Object> get props => [];
 }
 
-class HomeError extends HomeState {
+class HomeMovieError extends HomeMoviesState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
-class HomeLoading extends HomeState {
-  const HomeLoading(
-      {List<Result> trendings, int currentPage, MovieDetails latest})
-      : super(trendings: trendings, currentPage: currentPage, latest: latest);
+class HomeLoadingMovies extends HomeMoviesState {
+  const HomeLoadingMovies({
+    List<Result> trendings,
+    int currentPage,
+    MovieDetails latest,
+  }) : super(
+          trendings: trendings,
+        );
   @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }

@@ -40,7 +40,6 @@ class TvList extends Equatable {
   static TvList fromJson(String source) => fromMap(json.decode(source));
 
   @override
-  // TODO: implement props
   List<Object> get props => [page, total_pages, total_results];
 }
 

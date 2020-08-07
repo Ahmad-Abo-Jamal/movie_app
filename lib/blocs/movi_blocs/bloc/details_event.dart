@@ -11,7 +11,6 @@ class GetSimilarMovies extends DetailsEvent {
   });
 
   @override
-  // TODO: implement props
   List<Object> get props => [id];
 }
 
@@ -20,6 +19,5 @@ class GetMovieById extends DetailsEvent {
   GetMovieById({this.id});
 
   @override
-  // TODO: implement props
   List<Object> get props => [id];
 }

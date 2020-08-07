@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
 import 'package:switch_theme/blocs/movi_blocs/home_bloc/home_bloc_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/home_bloc/home_tv_bloc/home_tv_bloc.dart';
 
 import 'package:switch_theme/shared/trending.dart';
+
+enum MTV { MOVIE, TV }
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,55 +19,63 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<HomeBloc>(context).getTrending(dw: "week");
+    BlocProvider.of<HomeTvBloc>(context).getTvShows();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          return Container(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: <Widget>[
-                Flexible(
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 1.2,
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: buildListTile(context, MTV.MOVIE, "Movies Trending"),
+              ),
+              BlocBuilder<HomeBloc, HomeMoviesState>(builder: (context, state) {
+                return Flexible(
                   flex: 1,
-                  child: ListTile(
-                      trailing: PopupMenuButton(onSelected: (String value) {
-                        Logger().d(value);
-                        BlocProvider.of<HomeBloc>(context)
-                            .getTrending(dw: value);
-                      }, itemBuilder: (_) {
-                        return [
-                          PopupMenuItem(
-                              value: "day", child: Text("of the day")),
-                          PopupMenuItem(
-                              value: "week", child: Text("of the week")),
-                        ];
-                      }),
-                      leading:
-                          Text("Trending ", style: TextStyle(fontSize: 30.0))),
-                ),
-                Flexible(
-                  flex: 2,
-                  child: Container(
-                    child: _render(state),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
+                  child: _render(state),
+                );
+              }),
+              Flexible(
+                  flex: 1,
+                  child: buildListTile(context, MTV.TV, "Tv Shows Trending")),
+              BlocBuilder<HomeTvBloc, HomeTvState>(
+                builder: (context, state) {
+                  return Flexible(flex: 1, child: _renderTv(state));
+                },
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _render(HomeState state) {
-    Logger().d(state.latest);
-    if (state is HomeLoaded)
+  ListTile buildListTile(BuildContext context, MTV mtv, String title) {
+    return ListTile(
+        trailing: PopupMenuButton(onSelected: (String value) {
+          Logger().d(value);
+          if (mtv == MTV.MOVIE)
+            BlocProvider.of<HomeBloc>(context).getTrending(dw: value);
+          if (mtv == MTV.TV)
+            BlocProvider.of<HomeTvBloc>(context).getTvShows(dw: value);
+        }, itemBuilder: (_) {
+          return [
+            PopupMenuItem(value: "day", child: Text("of the day")),
+            PopupMenuItem(value: "week", child: Text("of the week")),
+          ];
+        }),
+        leading: Text(title ?? "No Title", style: TextStyle(fontSize: 30.0)));
+  }
+
+  Widget _render(HomeMoviesState state) {
+    if (state is HomeLoadedMovies)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -78,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       );
-    else if (state is HomeLoading) {
+    else if (state is HomeLoadingMovies) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -91,5 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return Text("error");
+  }
+
+  Widget _renderTv(HomeTvState state) {
+    if (state is HomeTvLoaded)
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Flexible(
+            flex: 2,
+            child: Trending(
+              tvItems: state?.tvShows ?? [],
+              context: context,
+              imgUrl: imgUrl,
+            ),
+          ),
+        ],
+      );
+    else if (state is HomeLoadingTv) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: LinearProgressIndicator(),
+        ),
+      );
+    } else if (state is HomeInitial) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Text("erro");
   }
 }

@@ -130,7 +130,6 @@ class MovieDetails extends Equatable {
   static MovieDetails fromJson(String source) => fromMap(json.decode(source));
 
   @override
-  // TODO: implement props
   List<Object> get props => [id];
 }
 

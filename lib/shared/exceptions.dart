@@ -1,0 +1,1 @@
+class NoNextPageException implements Exception {}

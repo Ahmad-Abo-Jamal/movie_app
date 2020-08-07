@@ -22,7 +22,6 @@ class _ListScreenState extends State<ListScreen> {
   MoviesBloc _mbloc;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mbloc = BlocProvider.of<MoviesBloc>(context);
     _mbloc.getMoviesByCriteria("now_playing");
@@ -47,7 +46,6 @@ class _ListScreenState extends State<ListScreen> {
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Theme.of(context).accentColor,
         onTap: (index) {
           final table = ["now_playing", "popular", "top_rated", "upcoming"];
           _mbloc.getMoviesByCriteria(table[index]);

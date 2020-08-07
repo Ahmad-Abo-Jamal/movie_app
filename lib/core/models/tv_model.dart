@@ -57,7 +57,6 @@ class TvDetails extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object> get props {
     return [id];
   }
@@ -219,7 +218,6 @@ class Genre extends Equatable {
   static Genre fromJson(String source) => fromMap(json.decode(source));
 
   @override
-  // TODO: implement props
   List<Object> get props => [id];
 }
 

@@ -15,6 +15,7 @@ import 'package:switch_theme/shared/app_bar.dart';
 
 import 'Theme/themes.dart';
 import 'blocs/movi_blocs/home_bloc/home_bloc_bloc.dart';
+import 'blocs/movi_blocs/home_bloc/home_tv_bloc/home_tv_bloc.dart';
 import 'blocs/movi_blocs/movies_bloc.dart';
 
 void main() {
@@ -25,19 +26,10 @@ void main() {
       BlocProvider(
           create: (context) =>
               AuthBloc(userRepository: userRepository)..add(AuthStarted())),
-      BlocProvider<ThemeBloc>(
-        create: (context) => ThemeBloc(),
-      ),
-      BlocProvider(create: (context) => MoviesBloc()),
-      BlocProvider(
-        create: (context) => HomeBloc(),
-      ),
+      BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
       BlocProvider(
         create: (context) => DetailsBloc(),
       ),
-      BlocProvider(
-        create: (context) => TvBloc(),
-      )
     ],
     child: MyApp(userRepository: userRepository),
   ));
@@ -63,7 +55,18 @@ class MyApp extends StatelessWidget {
               if (authState is AuthenticationInitial) {
                 return SplashScreen();
               } else if (authState is AuthenticationSuccess) {
-                return MainScreen();
+                return MultiBlocProvider(providers: [
+                  BlocProvider(create: (context) => MoviesBloc()),
+                  BlocProvider(
+                    create: (context) => HomeBloc(),
+                  ),
+                  BlocProvider(
+                    create: (context) => TvBloc(),
+                  ),
+                  BlocProvider(
+                    create: (context) => HomeTvBloc(),
+                  ),
+                ], child: MainScreen());
               }
               return LoginScreen(
                 userRepository: _userRepository,
@@ -94,7 +97,6 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }

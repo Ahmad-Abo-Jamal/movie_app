@@ -59,11 +59,9 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
   }
 
   @override
-  // TODO: implement child
   Widget get child => throw UnimplementedError();
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(
       AppBar().preferredSize.height * (tabController == null ? 1 : 2));
 }

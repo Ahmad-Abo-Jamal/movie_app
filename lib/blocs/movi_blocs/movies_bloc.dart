@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:switch_theme/core/api/movies_api.dart';
 import 'package:switch_theme/core/models/movie_list_model.dart';
 import 'package:switch_theme/core/models/movie_model.dart';
+import 'package:switch_theme/shared/exceptions.dart';
 
 part 'movies_event.dart';
 part 'movies_state.dart';

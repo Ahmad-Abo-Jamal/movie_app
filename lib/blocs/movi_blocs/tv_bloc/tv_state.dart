@@ -32,7 +32,6 @@ class TvLoading extends TvState {
           tvList: tvList,
         );
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -46,7 +45,6 @@ class TvLoaded extends TvState {
       int currentPage})
       : super(tvList: tvList, currentPage: currentPage, criteria: criteria);
   @override
-  // TODO: implement props
   List<Object> get props => [tvList];
 }
 
@@ -54,6 +52,5 @@ class TvError extends TvState {
   final String message;
   const TvError({this.message});
   @override
-  // TODO: implement props
   List<Object> get props => [message];
 }

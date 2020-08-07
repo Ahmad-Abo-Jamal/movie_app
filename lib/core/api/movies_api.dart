@@ -4,13 +4,14 @@ import 'package:switch_theme/core/models/movie_list_model.dart';
 
 import 'package:switch_theme/core/models/movie_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:switch_theme/shared/exceptions.dart';
 
 import 'constants.dart';
 
 abstract class MoviesRepo {
   Future<MovieDetails> getMovieById(int id);
   Future<MovieList> getNextMoviesPage(String criteria, int page);
-  Future<MovieList> getTrending(int page, String dw);
+  Future<MovieList> getTrending(String dw);
   Future<MovieList> getSimilarMovies(int id);
 }
 
@@ -54,15 +55,12 @@ class MoviesApi implements MoviesRepo {
     }
   }
 
-  Future<MovieList> getTrending(int page, String dw) async {
+  Future<MovieList> getTrending(String dw) async {
     try {
       http.Response response = await http.get(
           "https://api.themoviedb.org/3/trending/movie/${dw}?api_key=${api_key}");
 
       if (response.statusCode == 200) {
-        if (page >= jsonDecode(response.body)["total_pages"]) {
-          throw NoNextPageException();
-        }
         return MovieList.fromMap(jsonDecode(response.body));
       }
       throw Exception("Failed to Load trending movies");
@@ -103,5 +101,3 @@ class MoviesApi implements MoviesRepo {
     }
   }
 }
-
-class NoNextPageException implements Exception {}

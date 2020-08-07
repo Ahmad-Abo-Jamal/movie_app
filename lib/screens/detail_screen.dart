@@ -20,7 +20,6 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<DetailsBloc>(context).getMovieById(widget.result.id);
     BlocProvider.of<DetailsBloc>(context).getSimilarMovies(widget.result.id);
@@ -40,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
   SingleChildScrollView buildSingleChildScrollView(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * 1.2,
+        height: MediaQuery.of(context).size.height * 1.5,
         child: Column(
           children: <Widget>[
             Flexible(

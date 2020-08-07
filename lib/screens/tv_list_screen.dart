@@ -22,7 +22,6 @@ class _TvListScreenState extends State<TvListScreen> {
   TvBloc _mbloc;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mbloc = BlocProvider.of<TvBloc>(context);
     _mbloc.getTvByCriteria("airing_today");
@@ -46,8 +45,9 @@ class _TvListScreenState extends State<TvListScreen> {
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-        currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).accentColor,
+        backgroundColor: Colors.red,
+        currentIndex: _currentIndex,
         onTap: (index) {
           final table = ["airing_today", "on_the_air", "top_rated", "popular"];
           _mbloc.getTvByCriteria(table[index]);

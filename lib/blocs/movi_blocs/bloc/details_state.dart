@@ -19,7 +19,6 @@ class DetailsLoading extends DetailsState {
   const DetailsLoading({List<Result> similarMovies, MovieDetails movie})
       : super(similarMovies: similarMovies, movie: movie);
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -34,7 +33,6 @@ class DetailsLoaded extends DetailsState {
           movie: movie,
         );
   @override
-  // TODO: implement props
   List<Object> get props => [similarMovies, movie];
 }
 
@@ -42,6 +40,5 @@ class DetailsError extends DetailsState {
   final String message;
   const DetailsError({this.message});
   @override
-  // TODO: implement props
   List<Object> get props => [message];
 }

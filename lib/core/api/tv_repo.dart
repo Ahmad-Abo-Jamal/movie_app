@@ -4,13 +4,14 @@ import 'package:logger/logger.dart';
 import 'package:switch_theme/core/models/tv_list.dart';
 import 'package:switch_theme/core/models/tv_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:switch_theme/shared/exceptions.dart';
 
 import 'constants.dart';
 
 abstract class TvRepo {
   Future<TvDetails> getTvById(int id);
   Future<TvList> getNextTvPage(String criteria, int page);
-  Future<TvList> getTrending(int page, String dw);
+  Future<TvList> getTrending(String dw);
   Future<TvList> getSimilarTv(int id);
 }
 
@@ -54,15 +55,12 @@ class TvApi implements TvRepo {
     }
   }
 
-  Future<TvList> getTrending(int page, String dw) async {
+  Future<TvList> getTrending(String dw) async {
     try {
       http.Response response = await http.get(
           "https://api.themoviedb.org/3/trending/tv/${dw}?api_key=${api_key}");
-
+      logger.d(response.body);
       if (response.statusCode == 200) {
-        if (page >= jsonDecode(response.body)["total_pages"]) {
-          throw NoNextPageException();
-        }
         return TvList.fromMap(jsonDecode(response.body));
       }
       throw Exception("Failed to Load trending tv");
@@ -88,5 +86,3 @@ class TvApi implements TvRepo {
     }
   }
 }
-
-class NoNextPageException implements Exception {}
