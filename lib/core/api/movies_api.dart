@@ -13,6 +13,7 @@ abstract class MoviesRepo {
   Future<MovieList> getNextMoviesPage(String criteria, int page);
   Future<MovieList> getTrending(String dw);
   Future<MovieList> getSimilarMovies(int id);
+  Future<List<Genre>> getGenres();
 }
 
 class MoviesApi implements MoviesRepo {
@@ -33,6 +34,24 @@ class MoviesApi implements MoviesRepo {
     } catch (e) {
       logger.e(e.toString());
       throw Exception("Faled to load $id movies");
+    }
+  }
+
+  @override
+  Future<List<Genre>> getGenres() async {
+    try {
+      http.Response response = await http.get(
+          "https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=en-US");
+      logger.i(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)["genres"]
+            .map<Genre>((res) => Genre.fromMap(res))
+            .toList();
+      }
+      throw Exception("Failed to Load genres");
+    } catch (e) {
+      logger.e(e.toString());
+      throw Exception("Faled to load genres");
     }
   }
 

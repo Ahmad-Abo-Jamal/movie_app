@@ -24,8 +24,8 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
     return AppBar(
       bottom: tabController != null
           ? TabBar(
-              unselectedLabelColor: Theme.of(context).colorScheme.secondary,
-              labelColor: Theme.of(context).colorScheme.primary,
+              unselectedLabelColor: Theme.of(context).backgroundColor,
+              labelColor: Theme.of(context).indicatorColor,
               controller: tabController,
               tabs: [
                   Tab(

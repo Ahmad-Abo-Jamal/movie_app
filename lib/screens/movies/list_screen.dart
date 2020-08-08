@@ -45,8 +45,8 @@ class _ListScreenState extends State<ListScreen> {
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-        unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).backgroundColor,
+        selectedItemColor: Theme.of(context).indicatorColor,
         currentIndex: _currentIndex,
         onTap: (index) {
           final table = ["now_playing", "popular", "top_rated", "upcoming"];

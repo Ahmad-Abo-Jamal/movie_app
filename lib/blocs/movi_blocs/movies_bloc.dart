@@ -22,6 +22,10 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     this.add(GetMoviesByCriteria(criteria: criteria));
   }
 
+  void getGenres() {
+    this.add(GetGenres());
+  }
+
   void getNextPage() {
     logger.d(state.currentPage);
     this.add(
@@ -36,6 +40,22 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       yield* _mapGetMoviesByCriteriaToState(event);
     } else if (event is GetNextPage) {
       yield* _mapGetNextPage(event, event.nextPage);
+    } else if (event is GetGenres) {
+      yield* _mapGetGenresToState();
+    }
+  }
+
+  Stream<MoviesState> _mapGetGenresToState() async* {
+    try {
+      List<Genre> response = await _api.getGenres();
+      logger.d(response);
+      yield MoviesLoaded(
+          movies: state.movies,
+          currentPage: state.currentPage,
+          criteria: state.criteria,
+          genres: response);
+    } catch (e) {
+      yield MoviesError(message: "unable to get genres");
     }
   }
 
@@ -63,6 +83,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       MovieList response = await _api.getNextMoviesPage(event.criteria, page);
 
       yield MoviesLoaded(
+          genres: state.genres,
           movies: state.movies + response.results,
           reachedEnd: false,
           criteria: state.criteria,

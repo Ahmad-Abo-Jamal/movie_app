@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
@@ -50,6 +51,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
       return MaterialApp(
           title: 'Flutter Demo',

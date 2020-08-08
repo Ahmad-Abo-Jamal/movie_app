@@ -37,7 +37,8 @@ dependencies:
   google_sign_in: ^4.5.1
   firebase_core: ^0.4.5
   font_awesome_flutter: ^8.8.1
-  youtube_player_flutter: ^7.0.0+7
+  smooth_page_indicator: ^0.2.0
+
   rxdart: ^0.24.1
   material_design_icons_flutter: ^4.0.5345
 

@@ -80,8 +80,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   rating: (widget?.result?.vote_average / 10) * 5,
                   size: 40.0,
                   isReadOnly: true,
-                  color: Colors.green,
-                  borderColor: Colors.green,
+                  borderColor: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                   spacing: 0.0),
             ),
             Padding(

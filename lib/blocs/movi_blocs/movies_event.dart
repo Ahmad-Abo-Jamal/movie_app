@@ -20,3 +20,8 @@ class GetNextPage extends MoviesEvent {
   @override
   List<Object> get props => [criteria, nextPage];
 }
+
+class GetGenres extends MoviesEvent {
+  @override
+  List<Object> get props => [];
+}

@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:switch_theme/core/api/tv_repo.dart';
+import 'package:switch_theme/core/models/movie_model.dart';
 import 'package:switch_theme/core/models/tv_list.dart';
 import 'package:switch_theme/shared/exceptions.dart';
 

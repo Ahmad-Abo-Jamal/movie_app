@@ -87,6 +87,7 @@ class MyCard extends StatelessWidget {
               flex: 15,
               child: FadeInImage.assetNetwork(
                   placeholder: "assets/371.gif",
+                  placeholderCacheHeight: 10,
                   imageErrorBuilder: (_, o, st) {
                     return Container(
                         width: MediaQuery.of(context).size.width * 0.3,
@@ -116,8 +117,8 @@ class MyCard extends StatelessWidget {
                           5,
                       size: MediaQuery.of(context).size.width * 0.05,
                       isReadOnly: true,
-                      color: Colors.green,
-                      borderColor: Colors.green,
+                      color: Theme.of(context).indicatorColor,
+                      borderColor: Theme.of(context).accentColor,
                       spacing: 0.0),
             ),
             Flexible(

@@ -46,9 +46,8 @@ class _TvListScreenState extends State<TvListScreen> {
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-        unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        backgroundColor: Colors.red,
+        unselectedItemColor: Theme.of(context).backgroundColor,
+        selectedItemColor: Theme.of(context).indicatorColor,
         currentIndex: _currentIndex,
         onTap: (index) {
           final table = ["airing_today", "on_the_air", "top_rated", "popular"];
