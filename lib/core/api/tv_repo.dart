@@ -59,7 +59,6 @@ class TvApi implements TvRepo {
     try {
       http.Response response = await http.get(
           "https://api.themoviedb.org/3/trending/tv/${dw}?api_key=${api_key}");
-      logger.d(response.body);
       if (response.statusCode == 200) {
         return TvList.fromMap(jsonDecode(response.body));
       }

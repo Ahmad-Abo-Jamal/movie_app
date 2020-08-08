@@ -22,9 +22,10 @@ class _MySwitchState extends State<MySwitch> {
         activeColor: Colors.white,
         value: _switch,
         onChanged: (_) {
-          setState(() {
-            _switch = !_switch;
-          });
+          if (this.mounted)
+            setState(() {
+              _switch = !_switch;
+            });
           widget._bloc.switchTheme();
         });
   }

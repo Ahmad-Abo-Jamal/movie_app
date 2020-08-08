@@ -4,13 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 import 'package:switch_theme/blocs/auth_bloc/auth_bloc_bloc.dart';
 import 'package:switch_theme/blocs/movi_blocs/bloc/details_bloc.dart';
+import 'package:switch_theme/blocs/movi_blocs/bloc/tvdetails_bloc.dart';
 import 'package:switch_theme/blocs/movi_blocs/tv_bloc/tv_bloc.dart';
 import 'package:switch_theme/core/auth/authentification.dart';
-import 'package:switch_theme/screens/detail_screen.dart';
+import 'package:switch_theme/screens/movies/detail_screen.dart';
 import 'package:switch_theme/screens/home_screen.dart';
-import 'package:switch_theme/screens/list_screen.dart';
+import 'package:switch_theme/screens/movies/list_screen.dart';
 import 'package:switch_theme/screens/login_screen.dart';
-import 'package:switch_theme/screens/tv_list_screen.dart';
+import 'package:switch_theme/screens/tv_shows/tv_list_screen.dart';
 import 'package:switch_theme/shared/app_bar.dart';
 
 import 'Theme/themes.dart';
@@ -29,6 +30,9 @@ void main() {
       BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
       BlocProvider(
         create: (context) => DetailsBloc(),
+      ),
+      BlocProvider(
+        create: (context) => TvdetailsBloc(),
       ),
     ],
     child: MyApp(userRepository: userRepository),

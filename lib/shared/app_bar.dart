@@ -23,17 +23,21 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
   Widget build(BuildContext context) {
     return AppBar(
       bottom: tabController != null
-          ? TabBar(controller: tabController, tabs: [
-              Tab(
-                icon: Icon(MdiIcons.home),
-              ),
-              Tab(
-                icon: Icon(MdiIcons.movie),
-              ),
-              Tab(
-                icon: Icon(MdiIcons.television),
-              )
-            ])
+          ? TabBar(
+              unselectedLabelColor: Theme.of(context).colorScheme.secondary,
+              labelColor: Theme.of(context).colorScheme.primary,
+              controller: tabController,
+              tabs: [
+                  Tab(
+                    icon: Icon(MdiIcons.home),
+                  ),
+                  Tab(
+                    icon: Icon(MdiIcons.movie),
+                  ),
+                  Tab(
+                    icon: Icon(MdiIcons.television),
+                  )
+                ])
           : null,
       elevation: 0,
       leading: leading

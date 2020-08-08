@@ -5,11 +5,10 @@ enum AppTheme { DarkTheme, LightTheme }
 final Map<AppTheme, ThemeData> appTheme = {
   AppTheme.DarkTheme: ThemeData(
       fontFamily: 'Poppins',
+      colorScheme: ColorScheme.dark(),
       bottomAppBarColor: Colors.black,
       primaryColor: Colors.black,
-      tabBarTheme: TabBarTheme(
-          indicator:
-              BoxDecoration(shape: BoxShape.rectangle, color: Colors.grey)),
+      indicatorColor: Colors.purple,
       brightness: Brightness.dark,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: Colors.amber,
@@ -20,12 +19,11 @@ final Map<AppTheme, ThemeData> appTheme = {
               fontSize: 20.0,
               fontWeight: FontWeight.bold))),
   AppTheme.LightTheme: ThemeData(
+      colorScheme: ColorScheme.light(),
       bottomAppBarColor: Colors.black,
+      indicatorColor: Colors.indigo,
       fontFamily: 'Poppins',
       primaryColor: Colors.teal,
-      tabBarTheme: TabBarTheme(
-          indicator:
-              BoxDecoration(shape: BoxShape.rectangle, color: Colors.blueGrey)),
       backgroundColor: Colors.blueGrey,
       brightness: Brightness.light,
       floatingActionButtonTheme:

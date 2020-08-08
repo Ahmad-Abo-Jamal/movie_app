@@ -27,34 +27,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 1.2,
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: buildListTile(context, MTV.MOVIE, "Movies Trending"),
-              ),
-              BlocBuilder<HomeBloc, HomeMoviesState>(builder: (context, state) {
-                return Flexible(
-                  flex: 1,
-                  child: _render(state),
-                );
-              }),
-              Flexible(
-                  flex: 1,
-                  child: buildListTile(context, MTV.TV, "Tv Shows Trending")),
-              BlocBuilder<HomeTvBloc, HomeTvState>(
-                builder: (context, state) {
-                  return Flexible(flex: 1, child: _renderTv(state));
-                },
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+        body: CustomScrollView(slivers: <Widget>[
+      SliverList(
+          delegate: SliverChildListDelegate([
+        buildListTile(context, MTV.MOVIE, "Movies Trending"),
+        BlocBuilder<HomeBloc, HomeMoviesState>(builder: (context, state) {
+          return _render(state);
+        }),
+        buildListTile(context, MTV.TV, "Tv Shows Trending"),
+        BlocBuilder<HomeTvBloc, HomeTvState>(
+          builder: (context, state) {
+            return _renderTv(state);
+          },
+        )
+      ]))
+    ]));
   }
 
   ListTile buildListTile(BuildContext context, MTV mtv, String title) {
@@ -79,8 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Flexible(
-            flex: 2,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.4,
             child: Trending(
               items: state?.trendings ?? [],
               context: context,
@@ -90,15 +77,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
     else if (state is HomeLoadingMovies) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: LinearProgressIndicator(),
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: LinearProgressIndicator(),
+          ),
         ),
       );
     } else if (state is HomeInitial) {
-      return Center(
-        child: CircularProgressIndicator(),
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
     return Text("error");
@@ -109,8 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Flexible(
-            flex: 2,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.4,
             child: Trending(
               tvItems: state?.tvShows ?? [],
               context: context,
@@ -120,15 +113,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
     else if (state is HomeLoadingTv) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: LinearProgressIndicator(),
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: LinearProgressIndicator(),
+          ),
         ),
       );
     } else if (state is HomeInitial) {
-      return Center(
-        child: CircularProgressIndicator(),
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
     return Text("erro");

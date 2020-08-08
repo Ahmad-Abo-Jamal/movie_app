@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 
 class TvDetails extends Equatable {
   final int id;
-  final List<int> created_by;
+  // final List<int> created_by;
   final List<int> episode_run_time;
   final String first_air_date;
   final String backdrop_path;
@@ -30,7 +30,7 @@ class TvDetails extends Equatable {
   final int vote_count;
   TvDetails({
     this.id,
-    this.created_by,
+    // this.created_by,
     this.episode_run_time,
     this.first_air_date,
     this.backdrop_path,
@@ -64,7 +64,7 @@ class TvDetails extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'created_by': created_by,
+      // 'created_by': created_by,
       'episode_run_time': episode_run_time,
       'first_air_date': first_air_date,
       'backdrop_path': backdrop_path,
@@ -96,7 +96,7 @@ class TvDetails extends Equatable {
 
     return TvDetails(
       id: map['id'],
-      created_by: List<int>.from(map['created_by']),
+      // created_by: List<int>.from(map['created_by']),
       episode_run_time: List<int>.from(map['episode_run_time']),
       first_air_date: map['first_air_date'],
       backdrop_path: map['backdrop_path'],
@@ -130,7 +130,7 @@ class TvDetails extends Equatable {
 
   TvDetails copyWith({
     int id,
-    List<int> created_by,
+    // List<int> created_by,
     List<int> episode_run_time,
     String first_air_date,
     String backdrop_path,
@@ -157,7 +157,7 @@ class TvDetails extends Equatable {
   }) {
     return TvDetails(
       id: id ?? this.id,
-      created_by: created_by ?? this.created_by,
+      // created_by: created_by ?? this.created_by,
       episode_run_time: episode_run_time ?? this.episode_run_time,
       first_air_date: first_air_date ?? this.first_air_date,
       backdrop_path: backdrop_path ?? this.backdrop_path,
@@ -225,10 +225,11 @@ class Season extends Equatable {
   final String air_date;
   final int episode_count;
   final int id;
-
+  final String name;
   final String poster_path;
   final int season_number;
   Season({
+    this.name,
     this.air_date,
     this.episode_count,
     this.id,
@@ -238,6 +239,7 @@ class Season extends Equatable {
 
   Season copyWith({
     String air_date,
+    String name,
     int episode_count,
     int id,
     String poster_path,
@@ -245,6 +247,7 @@ class Season extends Equatable {
   }) {
     return Season(
       air_date: air_date ?? this.air_date,
+      name: name ?? this.name,
       episode_count: episode_count ?? this.episode_count,
       id: id ?? this.id,
       poster_path: poster_path ?? this.poster_path,
@@ -255,6 +258,7 @@ class Season extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'air_date': air_date,
+      'name': name,
       'episode_count': episode_count,
       'id': id,
       'poster_path': poster_path,
@@ -267,6 +271,7 @@ class Season extends Equatable {
 
     return Season(
       air_date: map['air_date'],
+      name: map['name'],
       episode_count: map['episode_count'],
       id: map['id'],
       poster_path: map['poster_path'],
