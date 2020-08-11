@@ -109,16 +109,25 @@ class _LoginFormState extends State<LoginForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Image.asset('assets/flutter_logo.png', height: 200),
+                  Container(
+                    height: 200.0,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: Center(
+                      child: Text("Welcome Back",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor,
+                              fontSize: 40.0)),
+                    ),
                   ),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
-                    ),
+                        icon: Icon(Icons.email,
+                            color: Theme.of(context).backgroundColor),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                            color: Theme.of(context).backgroundColor)),
                     keyboardType: TextInputType.emailAddress,
                     autovalidate: true,
                     autocorrect: false,
@@ -129,9 +138,11 @@ class _LoginFormState extends State<LoginForm> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
-                    ),
+                        icon: Icon(Icons.lock,
+                            color: Theme.of(context).backgroundColor),
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                            color: Theme.of(context).backgroundColor)),
                     obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
@@ -202,11 +213,13 @@ class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
+      color: Theme.of(context).buttonColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
       onPressed: _onPressed,
-      child: Text('Login'),
+      child: Text('Login',
+          style: TextStyle(color: Theme.of(context).backgroundColor)),
     );
   }
 }
@@ -224,8 +237,9 @@ class GoogleLoginButton extends StatelessWidget {
           LoginWithGooglePressed(),
         );
       },
-      label: Text('Sign in with Google', style: TextStyle(color: Colors.white)),
-      color: Colors.redAccent,
+      label: Text('Sign in with Google',
+          style: TextStyle(color: Theme.of(context).backgroundColor)),
+      color: Theme.of(context).cardColor,
     );
   }
 }
@@ -243,6 +257,7 @@ class CreateAccountButton extends StatelessWidget {
     return FlatButton(
       child: Text(
         'Create an Account',
+        style: TextStyle(color: Theme.of(context).backgroundColor),
       ),
       onPressed: () {
         Navigator.of(context).push(

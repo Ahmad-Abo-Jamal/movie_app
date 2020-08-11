@@ -22,6 +22,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Theme.of(context).cardColor,
       bottom: tabController != null
           ? TabBar(
               unselectedLabelColor: Theme.of(context).backgroundColor,

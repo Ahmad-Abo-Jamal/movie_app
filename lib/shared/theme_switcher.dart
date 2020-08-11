@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 
 class MySwitch extends StatefulWidget {
@@ -15,17 +16,11 @@ class MySwitch extends StatefulWidget {
 }
 
 class _MySwitchState extends State<MySwitch> {
-  bool _switch = false;
   @override
   Widget build(BuildContext context) {
-    return Switch.adaptive(
-        activeColor: Colors.white,
-        value: _switch,
-        onChanged: (_) {
-          if (this.mounted)
-            setState(() {
-              _switch = !_switch;
-            });
+    return IconButton(
+        icon: Icon(MdiIcons.themeLightDark),
+        onPressed: () {
           widget._bloc.switchTheme();
         });
   }

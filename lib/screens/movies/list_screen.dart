@@ -5,6 +5,7 @@ import 'package:switch_theme/Theme/bloc/theme_bloc.dart';
 import 'package:switch_theme/blocs/movi_blocs/movies_bloc.dart';
 import 'package:switch_theme/screens/movies/detail_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:switch_theme/shared/error.dart';
 
 class ListScreen extends StatefulWidget {
   static const imgUrl = "https://image.tmdb.org/t/p/w500/";
@@ -69,12 +70,14 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   Widget _render(BuildContext context, MoviesState state) {
-    if (state is MoviesLoading) {
+    if (state is MoviesLoading || state is MoviesInitial) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          backgroundColor: Theme.of(context).backgroundColor,
+        ),
       );
     } else if (state is MoviesError) {
-      return Text(state.message);
+      return ErrorUi(message: state.message);
     } else if (state is MoviesLoaded) {
       return NotificationListener<ScrollNotification>(
           onNotification: (notif) => _handleNotification(notif, context),
@@ -118,19 +121,25 @@ class _ListScreenState extends State<ListScreen> {
       },
       leading: Hero(
         tag: state?.movies[i]?.id,
-        child: FadeInImage.assetNetwork(
-            imageErrorBuilder: (_, __, ___) {
-              return Image.asset("assets/no-image.png");
-            },
-            placeholder: "assets/371.gif",
-            image:
-                "${ListScreen.imgUrl}${state?.movies[i]?.backdrop_path ?? ""}"),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.2,
+          child: FadeInImage.assetNetwork(
+              imageErrorBuilder: (_, __, ___) {
+                return Image.asset("assets/no-image.png");
+              },
+              placeholder: "assets/371.gif",
+              image:
+                  "${ListScreen.imgUrl}${state?.movies[i]?.backdrop_path ?? ""}"),
+        ),
       ),
-      title: Text(state?.movies[i]?.original_title?.toString()),
+      title: Text(state?.movies[i]?.original_title?.toString(),
+          style: TextStyle(color: Theme.of(context).backgroundColor)),
       trailing: CircularPercentIndicator(
-        center: Text(state?.movies[i]?.vote_average.toString()),
+        center: Text(state?.movies[i]?.vote_average.toString(),
+            style: TextStyle(color: Theme.of(context).backgroundColor)),
         radius: 40.0,
-        progressColor: Theme.of(context).accentColor,
+        progressColor: Theme.of(context).indicatorColor,
+        backgroundColor: Theme.of(context).cardColor,
         percent: state?.movies[i]?.vote_average / 10 ?? 0,
       ),
     );

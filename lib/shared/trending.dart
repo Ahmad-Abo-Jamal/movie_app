@@ -7,6 +7,7 @@ import 'package:switch_theme/core/models/tv_list.dart';
 import 'package:switch_theme/core/models/tv_model.dart';
 import 'package:switch_theme/screens/movies/detail_screen.dart';
 import 'package:switch_theme/screens/tv_shows/tv_details_screen.dart';
+import 'package:switch_theme/shared/star_rating.dart';
 
 class Trending extends StatelessWidget {
   const Trending({
@@ -34,7 +35,7 @@ class Trending extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (_, i) {
               return Container(
-                width: MediaQuery.of(context).size.width * 0.3,
+                width: MediaQuery.of(context).size.width * 0.4,
                 child: MyCard(
                     item: items?.elementAt(i),
                     tvItem: tvItems?.elementAt(i),
@@ -85,41 +86,60 @@ class MyCard extends StatelessWidget {
           children: <Widget>[
             Flexible(
               flex: 15,
-              child: FadeInImage.assetNetwork(
-                  placeholder: "assets/371.gif",
-                  placeholderCacheHeight: 10,
-                  imageErrorBuilder: (_, o, st) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: Image.asset(
-                          "assets/no-image.png",
-                        ));
-                  },
-                  image: imgUrl +
-                      (item?.poster_path ??
-                          movie?.poster_path ??
-                          tvItem?.poster_path ??
-                          season?.poster_path ??
-                          "")),
+              child: season != null
+                  ? Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: FadeInImage.assetNetwork(
+                          placeholder: "assets/371.gif",
+                          placeholderCacheHeight: 10,
+                          imageErrorBuilder: (_, o, st) {
+                            return Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: Image.asset(
+                                  "assets/no-image.png",
+                                ));
+                          },
+                          image: imgUrl + (season.poster_path ?? "")),
+                    )
+                  : Hero(
+                      tag: item?.id ?? tvItem?.id ?? movie?.id,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 200,
+                        child: FadeInImage.assetNetwork(
+                            placeholder: "assets/371.gif",
+                            placeholderCacheHeight: 10,
+                            imageErrorBuilder: (_, o, st) {
+                              return Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  child: Image.asset(
+                                    "assets/no-image.png",
+                                  ));
+                            },
+                            image: imgUrl +
+                                (item?.poster_path ??
+                                    movie?.poster_path ??
+                                    tvItem?.poster_path ??
+                                    season?.poster_path ??
+                                    "")),
+                      ),
+                    ),
             ),
             Flexible(
               flex: 2,
               child: season != null
-                  ? Text(season?.air_date ?? "")
-                  : SmoothStarRating(
-                      allowHalfRating: false,
-                      onRated: (v) {},
-                      starCount: 5,
-                      rating: ((item?.vote_average ??
-                                  movie?.vote_average ??
-                                  tvItem?.vote_average) /
-                              10) *
-                          5,
+                  ? Text(
+                      season?.air_date ?? "",
+                      style:
+                          TextStyle(color: Theme.of(context).backgroundColor),
+                    )
+                  : MyStarRating(
+                      voteAverage: item?.vote_average ??
+                          movie?.vote_average ??
+                          tvItem?.vote_average,
                       size: MediaQuery.of(context).size.width * 0.05,
-                      isReadOnly: true,
-                      color: Theme.of(context).indicatorColor,
-                      borderColor: Theme.of(context).accentColor,
-                      spacing: 0.0),
+                    ),
             ),
             Flexible(
               flex: 3,
@@ -130,6 +150,7 @@ class MyCard extends StatelessWidget {
                     season?.name ??
                     "",
                 maxLines: 1,
+                style: TextStyle(color: Theme.of(context).backgroundColor),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),

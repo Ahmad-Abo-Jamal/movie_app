@@ -7,6 +7,8 @@ import 'package:switch_theme/core/api/constants.dart';
 import 'package:switch_theme/core/models/movie_list_model.dart';
 import 'package:switch_theme/core/models/tv_list.dart';
 import 'package:switch_theme/shared/app_bar.dart';
+import 'package:switch_theme/shared/error.dart';
+import 'package:switch_theme/shared/star_rating.dart';
 import 'package:switch_theme/shared/trending.dart';
 import "../../core/api/constants.dart";
 
@@ -43,7 +45,7 @@ class _DetailScreenState extends State<DetailScreen> {
         SliverList(
           delegate: SliverChildListDelegate([
             Container(
-              height: height * 0.4,
+              height: 300,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Hero(
@@ -63,33 +65,32 @@ class _DetailScreenState extends State<DetailScreen> {
               child: Center(
                   child: Text(widget?.result?.title,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 30.0))),
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          color: Theme.of(context).backgroundColor))),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
                   child: Text(widget?.result?.release_date,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 30.0))),
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          color: Theme.of(context).backgroundColor))),
             ),
             Center(
-              child: SmoothStarRating(
-                  allowHalfRating: false,
-                  onRated: (v) {},
-                  starCount: 5,
-                  rating: (widget?.result?.vote_average / 10) * 5,
-                  size: 40.0,
-                  isReadOnly: true,
-                  borderColor: Theme.of(context).accentColor,
-                  color: Theme.of(context).indicatorColor,
-                  spacing: 0.0),
+              child: MyStarRating(
+                voteAverage: widget?.result?.vote_average,
+                size: 40.0,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: Text(
                 widget?.result?.overview,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 15.0),
+                style: TextStyle(
+                    fontSize: 15.0, color: Theme.of(context).backgroundColor),
               ),
             ),
             BlocBuilder<DetailsBloc, DetailsState>(
@@ -113,20 +114,24 @@ class _DetailScreenState extends State<DetailScreen> {
             child: state?.movie?.genres?.length == 0 ||
                     state?.movie?.genres == null
                 ? Container(
-                    height: height * 0.1,
+                    height: 50.0,
                     child: Center(
                       child: Chip(
-                        label: Text("no gender specified"),
+                        label: Text("no gender specified",
+                            style: TextStyle(
+                                color: Theme.of(context).backgroundColor)),
                       ),
                     ),
                   )
                 : Container(
-                    height: height * 0.1,
+                    height: 50.0,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state?.movie?.genres?.length ?? 0,
                       itemBuilder: (_, i) => Chip(
-                          label: Text(state?.movie?.genres[i]?.name ?? "")),
+                          label: Text(state?.movie?.genres[i]?.name ?? "",
+                              style: TextStyle(
+                                  color: Theme.of(context).backgroundColor))),
                     ),
                   ),
           ),
@@ -135,20 +140,16 @@ class _DetailScreenState extends State<DetailScreen> {
       );
     else if (state is DetailsLoading) {
       return Container(
-        height: height * 0.05,
+        height: 50.0,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(20.0),
           child: LinearProgressIndicator(),
         ),
       );
     } else {
-      return Container(
-        height: height * 0.1,
-        child: Card(
-          child: Text("No gender specified"),
-          color: Theme.of(context).backgroundColor,
-        ),
-      );
+      return Chip(
+          label: Text("No gender specified",
+              style: TextStyle(color: Theme.of(context).backgroundColor)));
     }
   }
 
@@ -157,7 +158,7 @@ class _DetailScreenState extends State<DetailScreen> {
       return Column(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: 50,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: <Widget>[
@@ -170,7 +171,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                 "Not Mentioned") +
                             "\$",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20.0)),
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).backgroundColor)),
                   ),
                 ),
                 Padding(
@@ -182,36 +185,49 @@ class _DetailScreenState extends State<DetailScreen> {
                                 "Not Mentioned") +
                             "\$",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20.0)),
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).backgroundColor)),
                   ),
                 ),
               ],
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: 50,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Similar Movies", style: TextStyle(fontSize: 30.0)),
+              child: Text("Similar Movies",
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      color: Theme.of(context).backgroundColor)),
             ),
           ),
           !(state?.similarMovies?.length == 0 || state?.similarMovies == null)
               ? Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
+                  height: 300,
                   child: Trending(
                       context: context,
                       imgUrl: imgUrl,
                       items: state?.similarMovies ?? []),
                 )
               : Chip(
-                  label: Text("No Similar Movies"),
+                  label: Text(
+                    "No Similar Movies",
+                    style: TextStyle(color: Theme.of(context).backgroundColor),
+                  ),
                 ),
         ],
       );
-    } else if (state is DetailsLoading) {
+    } else if (state is DetailsLoading || state is DetailsInitial) {
       return Container(
-          height: MediaQuery.of(context).size.height * 0.05,
-          child: LinearProgressIndicator());
+          height: 50.0,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: LinearProgressIndicator(),
+          ));
+    } else if (state is DetailsError) {
+      return ErrorUi();
     }
     return SizedBox();
   }

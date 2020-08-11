@@ -55,8 +55,9 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
       return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          theme: appTheme[state.themeData],
+          theme: state.themeData,
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
               if (authState is AuthenticationInitial) {
@@ -88,8 +89,26 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('Splash Screen')),
-    );
+        body: Container(
+      height: 600.0,
+      width: double.infinity,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Icon(
+              Icons.vpn_key,
+              size: 100.0,
+              color: Theme.of(context).backgroundColor,
+            ),
+            CircularProgressIndicator(
+              strokeWidth: 10.0,
+              backgroundColor: Theme.of(context).backgroundColor,
+            )
+          ],
+        ),
+      ),
+    ));
   }
 }
 

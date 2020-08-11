@@ -6,6 +6,7 @@ import 'package:switch_theme/blocs/movi_blocs/tv_bloc/tv_bloc.dart';
 import 'package:switch_theme/screens/movies/detail_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:switch_theme/screens/tv_shows/tv_details_screen.dart';
+import 'package:switch_theme/shared/error.dart';
 
 class TvListScreen extends StatefulWidget {
   static const imgUrl = "https://image.tmdb.org/t/p/w500/";
@@ -70,12 +71,16 @@ class _TvListScreenState extends State<TvListScreen> {
   }
 
   Widget _render(BuildContext context, TvState state) {
-    if (state is TvLoading) {
+    if (state is TvLoading || state is TvInitial) {
       return Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          backgroundColor: Theme.of(context).backgroundColor,
+        ),
       );
     } else if (state is TvError) {
-      return Text(state.message);
+      return ErrorUi(
+        message: state.message,
+      );
     } else if (state is TvLoaded) {
       return NotificationListener<ScrollNotification>(
           onNotification: (notif) => _handleNotification(notif, context),
@@ -111,19 +116,25 @@ class _TvListScreenState extends State<TvListScreen> {
       },
       leading: Hero(
         tag: state?.tvList[i]?.id,
-        child: FadeInImage.assetNetwork(
-            imageErrorBuilder: (_, __, ___) {
-              return Image.asset("assets/no-image.png");
-            },
-            placeholder: "assets/371.gif",
-            image:
-                "${TvListScreen.imgUrl}${state?.tvList[i]?.backdrop_path ?? ""}"),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.2,
+          child: FadeInImage.assetNetwork(
+              imageErrorBuilder: (_, __, ___) {
+                return Image.asset("assets/no-image.png");
+              },
+              placeholder: "assets/371.gif",
+              image:
+                  "${TvListScreen.imgUrl}${state?.tvList[i]?.backdrop_path ?? ""}"),
+        ),
       ),
-      title: Text(state?.tvList[i]?.name?.toString()),
+      title: Text(state?.tvList[i]?.name?.toString(),
+          style: TextStyle(color: Theme.of(context).backgroundColor)),
       trailing: CircularPercentIndicator(
-        center: Text(state?.tvList[i]?.vote_average.toString()),
+        center: Text(state?.tvList[i]?.vote_average.toString(),
+            style: TextStyle(color: Theme.of(context).backgroundColor)),
         radius: 40.0,
-        progressColor: Theme.of(context).accentColor,
+        progressColor: Theme.of(context).indicatorColor,
+        backgroundColor: Theme.of(context).cardColor,
         percent: state?.tvList[i]?.vote_average / 10 ?? 0,
       ),
     );

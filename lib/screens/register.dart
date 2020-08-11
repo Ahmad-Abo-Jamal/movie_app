@@ -103,13 +103,27 @@ class _RegisterFormState extends State<RegisterForm> {
             child: Form(
               child: ListView(
                 children: <Widget>[
-                  Image.asset("assets/flutter_logo.png"),
+                  Container(
+                    height: 300.0,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: Center(
+                      child: Text("Nice To Meet You !",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Theme.of(context).backgroundColor,
+                              fontSize: 40.0)),
+                    ),
+                  ),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
-                    ),
+                        icon: Icon(
+                          Icons.email,
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                            color: Theme.of(context).backgroundColor)),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     autovalidate: true,
@@ -120,9 +134,11 @@ class _RegisterFormState extends State<RegisterForm> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
-                    ),
+                        icon: Icon(Icons.lock,
+                            color: Theme.of(context).backgroundColor),
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                            color: Theme.of(context).backgroundColor)),
                     obscureText: true,
                     autocorrect: false,
                     autovalidate: true,
@@ -183,11 +199,13 @@ class RegisterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
+      color: Theme.of(context).buttonColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
       onPressed: _onPressed,
-      child: Text('Register'),
+      child: Text('Register',
+          style: TextStyle(color: Theme.of(context).backgroundColor)),
     );
   }
 }

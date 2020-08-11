@@ -11,9 +11,7 @@ part 'theme_state.dart';
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc() : super(ThemeInitial());
   void switchTheme() {
-    this.add(ChangeTheme(state.themeData == AppTheme.DarkTheme
-        ? AppTheme.LightTheme
-        : AppTheme.DarkTheme));
+    this.add(ChangeTheme((state.currentTheme + 1) % themes.length));
   }
 
   @override
@@ -21,7 +19,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     ThemeEvent event,
   ) async* {
     if (event is ChangeTheme) {
-      yield ThemeChosen(appTheme: event.chosenTheme);
+      yield ThemeChosen(i: event.chosenTheme);
     }
   }
 }

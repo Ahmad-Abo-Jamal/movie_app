@@ -7,6 +7,7 @@ import 'package:switch_theme/blocs/movi_blocs/home_bloc/home_tv_bloc/home_tv_blo
 import 'package:switch_theme/blocs/movi_blocs/movies_bloc.dart';
 import 'package:switch_theme/core/api/constants.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:switch_theme/shared/error.dart';
 
 import 'package:switch_theme/shared/trending.dart';
 
@@ -18,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controller = PageController(viewportFraction: 0.8);
+  final controller = PageController(viewportFraction: 0.9);
 
   @override
   void initState() {
@@ -30,11 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _renderTopHome(MoviesState state) {
-    if (state is MoviesLoading) {
+    if (state is MoviesLoading || state is MoviesInitial) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: 250,
         child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            backgroundColor: Theme.of(context).backgroundColor,
+          ),
         ),
       );
     } else if (state is MoviesLoaded) {
@@ -43,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state?.genres != null)
             if (state?.genres.length > 0)
               Container(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: 50,
                 child: ListView.builder(
                     itemCount: state?.genres?.length,
                     itemBuilder: (_, i) {
@@ -52,8 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
               ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.width,
+            height: 250,
             color: Colors.transparent,
             child: PageView.builder(
                 itemCount: state?.movies?.length ~/ 3,
@@ -61,13 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (_, i) {
                   return Card(
                     color: Colors.transparent,
-                    child: Stack(
-                      children: <Widget>[
-                        Image.network(
-                          imgUrl + state?.movies[i]?.backdrop_path,
-                          fit: BoxFit.cover,
-                        ),
-                        Align(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  imgUrl + state?.movies[i]?.backdrop_path,
+                                ))),
+                        child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             color: Colors.black45,
@@ -78,13 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 20.0),
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Theme.of(context).backgroundColor),
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                        )),
                   );
                 }),
           ),
@@ -95,16 +99,18 @@ class _HomeScreenState extends State<HomeScreen> {
               effect: SwapEffect(
                   dotHeight: 10.0,
                   dotWidth: 10.0,
-                  dotColor: Theme.of(context).accentColor,
-                  activeDotColor: Theme.of(context).backgroundColor),
+                  dotColor: Theme.of(context).backgroundColor,
+                  activeDotColor: Theme.of(context).indicatorColor),
               controller: controller,
               count: state?.movies?.length ~/ 3)
         ],
       );
-    }
-    return Center(
-      child: Text("error"),
-    );
+    } else if (state is MoviesError)
+      return Center(
+        child: ErrorUi(),
+      );
+
+    return SizedBox();
   }
 
   @override
@@ -134,19 +140,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ListTile buildListTile(BuildContext context, MTV mtv, String title) {
     return ListTile(
-        trailing: PopupMenuButton(onSelected: (String value) {
-          Logger().d(value);
-          if (mtv == MTV.MOVIE)
-            BlocProvider.of<HomeBloc>(context).getTrending(dw: value);
-          if (mtv == MTV.TV)
-            BlocProvider.of<HomeTvBloc>(context).getTvShows(dw: value);
-        }, itemBuilder: (_) {
-          return [
-            PopupMenuItem(value: "day", child: Text("of the day")),
-            PopupMenuItem(value: "week", child: Text("of the week")),
-          ];
-        }),
-        leading: Text(title ?? "No Title", style: TextStyle(fontSize: 30.0)));
+        trailing: PopupMenuButton(
+            color: Theme.of(context).backgroundColor,
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).backgroundColor,
+            ),
+            onSelected: (String value) {
+              Logger().d(value);
+              if (mtv == MTV.MOVIE)
+                BlocProvider.of<HomeBloc>(context).getTrending(dw: value);
+              if (mtv == MTV.TV)
+                BlocProvider.of<HomeTvBloc>(context).getTvShows(dw: value);
+            },
+            itemBuilder: (_) {
+              return [
+                PopupMenuItem(value: "day", child: Text("of the day")),
+                PopupMenuItem(value: "week", child: Text("of the week")),
+              ];
+            }),
+        leading: Text(title ?? "No Title",
+            style: TextStyle(
+                fontSize: 30.0, color: Theme.of(context).backgroundColor)));
   }
 
   Widget _render(HomeMoviesState state) {
@@ -155,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
+            height: 300.0,
             child: Trending(
               items: state?.trendings ?? [],
               context: context,
@@ -166,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     else if (state is HomeLoadingMovies) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: 50,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -176,13 +191,16 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } else if (state is HomeInitial) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: 50,
         child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            backgroundColor: Theme.of(context).backgroundColor,
+          ),
         ),
       );
+    } else if (state is HomeTvError) {
+      return ErrorUi();
     }
-    return Text("error");
   }
 
   Widget _renderTv(HomeTvState state) {
@@ -191,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
+            height: 300,
             child: Trending(
               tvItems: state?.tvShows ?? [],
               context: context,
@@ -200,9 +218,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       );
-    else if (state is HomeLoadingTv) {
+    else if (state is HomeLoadingTv || state is HomeTvInitial) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: 50,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -210,14 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
-    } else if (state is HomeInitial) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-    return Text("erro");
+    } else if (state is HomeTvError) {
+      return ErrorUi();
+    } else
+      return SizedBox();
   }
 }
